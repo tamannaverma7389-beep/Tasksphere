@@ -28,10 +28,7 @@ async function handleUserLogin(req,res) {
     if (!isMatch)
         return res.status(401).json({ error: "Invalid credentials" });
 
-    const token = setUser(user);
-    res.cookie("uid", token, {
-        httpOnly: true
-    });
+    
 
     return res.json({ msg: "Login success" });
 }
