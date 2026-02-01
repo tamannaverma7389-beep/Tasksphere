@@ -18,22 +18,29 @@ async function handleUserSignup(req,res) {
         { msg: "Signup success" };
 }
 
-async function handleUserLogin(req,res) {
+
+async function handleUserLogin(req, res) {
     const { email, password } = req.body;
-    const user = await User.findOne({email, password});
+    const user = await User.findOne({ email });
     if (!user) {
-        return res.json( {error:"invalid username or password"});
+        return res.json({ error: "invalid username or password" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
         return res.status(401).json({ error: "Invalid credentials" });
 
-    
+    const token = setUser(user);
 
-    return res.json({ msg: "Login success" });
+
+    return res.json({
+        msg: "Login success", userInfo: {
+            token,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+        }
+    });
 }
-
-
 
 module.exports = {
      handleUserSignup,
